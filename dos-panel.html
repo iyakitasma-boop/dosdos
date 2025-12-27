@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KILLER_VOIDS | REAL DOS PANEL</title>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --danger: #ff0055;
+            --dark: #0a0a0a;
+            --gray: #1a1a1a;
+            --light: #f0f0f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background: var(--dark);
+            color: var(--primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px var(--primary);
+        }
+        
+        .tagline {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background: var(--gray);
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .control-panel, .status-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+        
+        .panel-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: #00cc66;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #cc0044;
+        }
+        
+        .attack-status {
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .status-value {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .log-box {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .log-time {
+            color: #666;
+            margin-right: 10px;
+        }
+        
+        .log-message {
+            color: #aaa;
+        }
+        
+        .log-success { color: var(--primary); }
+        .log-error { color: var(--danger); }
+        .log-info { color: #00aaff; }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .method-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .method-card.selected {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .method-title {
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .method-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-skull-crossbones fa-2x"></i>
+                <h1>KILLER_VOIDS</h1>
+            </div>
+            <p class="tagline">REAL DOS ATTACK PANEL - Vercel Edition</p>
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="online-dot"></div>
+                <span>SYSTEM ONLINE</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>API: <span id="api-status">Checking...</span></span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-bolt"></i>
+                <span>ATTACKS: <span id="active-attacks">0</span></span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-clock"></i>
+                <span id="current-time">--:--:--</span>
+            </div>
+        </div>
+        
+        <!-- Main Panel -->
+        <div class="panel">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h2 class="panel-title">
+                    <i class="fas fa-crosshairs"></i> ATTACK CONTROL
+                </h2>
+                
+                <!-- Target Input -->
+                <div class="form-group">
+                    <label for="target">
+                        <i class="fas fa-bullseye"></i> TARGET WEBSITE
+                    </label>
+                    <input type="text" id="target" placeholder="example.com atau http://example.com">
+                    <div style="margin-top: 5px; font-size: 0.9rem; color: #666;">
+                        IP: <span id="target-ip">--</span>
+                    </div>
+                </div>
+                
+                <!-- Method Selection -->
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-tools"></i> ATTACK METHOD
+                    </label>
+                    <div class="methods-grid" id="methods-container">
+                        <!-- Methods akan diisi JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Duration -->
+                <div class="form-group">
+                    <label for="duration">
+                        <i class="fas fa-hourglass-half"></i> DURATION (seconds)
+                    </label>
+                    <input type="range" id="duration" min="30" max="120" value="60">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span>30s</span>
+                        <span id="duration-value">60s</span>
+                        <span>120s</span>
+                    </div>
+                </div>
+                
+                <!-- Intensity -->
+                <div class="form-group">
+                    <label for="intensity">
+                        <i class="fas fa-tachometer-alt"></i> INTENSITY
+                    </label>
+                    <input type="range" id="intensity" min="10" max="50" value="30">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span>Low</span>
+                        <span id="intensity-value">Medium</span>
+                        <span>High</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="form-group" style="display: flex; gap: 15px;">
+                    <button class="btn" id="start-btn">
+                        <i class="fas fa-play"></i> START ATTACK
+                    </button>
+                    <button class="btn btn-danger" id="stop-btn" disabled>
+                        <i class="fas fa-stop"></i> STOP ALL
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Status Panel -->
+            <div class="status-panel">
+                <h2 class="panel-title">
+                    <i class="fas fa-chart-line"></i> ATTACK STATUS
+                </h2>
+                
+                <!-- Current Attack -->
+                <div id="current-attack">
+                    <p style="color: #666; text-align: center; padding: 20px;">
+                        No active attack
+                    </p>
+                </div>
+                
+                <!-- Progress -->
+                <div class="attack-status" style="display: none;" id="attack-status-box">
+                    <div class="status-item">
+                        <span>Target:</span>
+                        <span class="status-value" id="attack-target">--</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Method:</span>
+                        <span class="status-value" id="attack-method">--</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Duration:</span>
+                        <span class="status-value" id="attack-duration">--</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Requests:</span>
+                        <span class="status-value" id="attack-requests">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Status:</span>
+                        <span class="status-value" id="attack-status">--</span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="attack-progress"></div>
+                    </div>
+                </div>
+                
+                <!-- Log -->
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-terminal"></i> ATTACK LOG
+                    </label>
+                    <div class="log-box" id="log-box">
+                        <div class="log-entry">
+                            <span class="log-time">[SYSTEM]</span>
+                            <span class="log-message log-info">DOS Panel initialized</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let currentAttackId = null;
+        let attackInterval = null;
+        const API_BASE = '/api/dos';
+        const logBox = document.getElementById('log-box');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update time
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Load methods
+            loadMethods();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Check API status
+            checkAPIStatus();
+            setInterval(checkAPIStatus, 30000);
+            
+            // Auto resolve DNS on target blur
+            document.getElementById('target').addEventListener('blur', resolveDNS);
+            
+            // Update range values
+            document.getElementById('duration').addEventListener('input', updateDurationValue);
+            document.getElementById('intensity').addEventListener('input', updateIntensityValue);
+        });
+        
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            document.getElementById('current-time').textContent = timeStr;
+        }
+        
+        // Load attack methods
+        async function loadMethods() {
+            try {
+                const response = await fetch(`${API_BASE}/methods`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const container = document.getElementById('methods-container');
+                    container.innerHTML = '';
+                    
+                    data.methods.forEach(method => {
+                        const methodCard = document.createElement('div');
+                        methodCard.className = 'method-card';
+                        methodCard.dataset.method = method.id;
+                        
+                        methodCard.innerHTML = `
+                            <div class="method-title">
+                                <i class="fas fa-bolt"></i>
+                                <span>${method.name}</span>
+                            </div>
+                            <div class="method-desc">${method.desc}</div>
+                        `;
+                        
+                        methodCard.addEventListener('click', () => selectMethod(method.id));
+                        container.appendChild(methodCard);
+                    });
+                    
+                    // Select first method by default
+                    if (data.methods.length > 0) {
+                        selectMethod(data.methods[0].id);
+                    }
+                }
+            } catch (error) {
+                addLog('Failed to load methods', 'error');
+            }
+        }
+        
+        // Select method
+        function selectMethod(methodId) {
+            // Remove selected class from all
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked
+            const selectedCard = document.querySelector(`.method-card[data-method="${methodId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+        }
+        
+        // Get selected method
+        function getSelectedMethod() {
+            const selected = document.querySelector('.method-card.selected');
+            return selected ? selected.dataset.method : 'http_flood';
+        }
+        
+        // Update duration value display
+        function updateDurationValue() {
+            const duration = document.getElementById('duration').value;
+            document.getElementById('duration-value').textContent = `${duration}s`;
+        }
+        
+        // Update intensity value display
+        function updateIntensityValue() {
+            const intensity = parseInt(document.getElementById('intensity').value);
+            let level = 'Low';
+            if (intensity >= 40) level = 'High';
+            else if (intensity >= 25) level = 'Medium';
+            
+            document.getElementById('intensity-value').textContent = level;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Start attack button
+            document.getElementById('start-btn').addEventListener('click', startAttack);
+            
+            // Stop attack button
+            document.getElementById('stop-btn').addEventListener('click', stopAttack);
+        }
+        
+        // Resolve DNS
+        async function resolveDNS() {
+            const target = document.getElementById('target').value.trim();
+            if (!target) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/resolve`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ target: target })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('target-ip').textContent = data.ip;
+                    addLog(`DNS resolved: ${data.domain} → ${data.ip}`, 'success');
+                } else {
+                    document.getElementById('target-ip').textContent = 'Failed';
+                    addLog(`DNS failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                document.getElementById('target-ip').textContent = 'Error';
+                addLog('DNS resolution error', 'error');
+            }
+        }
+        
+        // Start attack
+        async function startAttack() {
+            const target = document.getElementById('target').value.trim();
+            const method = getSelectedMethod();
+            const duration = document.getElementById('duration').value;
+            const intensity = document.getElementById('intensity').value;
+            
+            if (!target) {
+                alert('Please enter target URL!');
+                return;
+            }
+            
+            // Disable start button
+            const startBtn = document.getElementById('start-btn');
+            startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> STARTING...';
+            startBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        target: target,
+                        method: method,
+                        duration: duration,
+                        intensity: intensity
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentAttackId = data.attack_id;
+                    addLog(`Attack started: ${data.message}`, 'success');
+                    
+                    // Update UI
+                    updateAttackUI(data);
+                    
+                    // Enable stop button
+                    document.getElementById('stop-btn').disabled = false;
+                    
+                    // Start monitoring
+                    startMonitoring();
+                } else {
+                    addLog(`Failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                addLog('Network error starting attack', 'error');
+            } finally {
+                // Re-enable start button
+                startBtn.innerHTML = '<i class="fas fa-play"></i> START ATTACK';
+                startBtn.disabled = false;
+            }
+        }
+        
+        // Stop attack
+        async function stopAttack() {
+            if (!currentAttackId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/stop/${currentAttackId}`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addLog('Attack stopped', 'info');
+                    
+                    // Clear monitoring
+                    if (attackInterval) {
+                        clearInterval(attackInterval);
+                        attackInterval = null;
+                    }
+                    
+                    // Update UI
+                    document.getElementById('stop-btn').disabled = true;
+                    document.getElementById('attack-status').textContent = 'STOPPED';
+                }
+            } catch (error) {
+                addLog('Error stopping attack', 'error');
+            }
+        }
+        
+        // Start monitoring attack
+        function startMonitoring() {
+            if (attackInterval) clearInterval(attackInterval);
+            
+            attackInterval = setInterval(async () => {
+                if (!currentAttackId) return;
+                
+                try {
+                    const response = await fetch(`${API_BASE}/status/${currentAttackId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        updateAttackStatus(data.attack);
+                    } else {
+                        // Attack finished or error
+                        clearInterval(attackInterval);
+                        attackInterval = null;
+                        document.getElementById('stop-btn').disabled = true;
+                        addLog('Attack completed', 'info');
+                    }
+                } catch (error) {
+                    console.error('Monitoring error:', error);
+                }
+            }, 2000);
+        }
+        
+        // Update attack UI
+        function updateAttackUI(data) {
+            document.getElementById('attack-status-box').style.display = 'block';
+            document.getElementById('attack-target').textContent = data.target;
+            document.getElementById('attack-method').textContent = data.method.toUpperCase();
+            document.getElementById('attack-duration').textContent = data.duration + 's';
+        }
+        
+        // Update attack status
+        function updateAttackStatus(attack) {
+            document.getElementById('attack-requests').textContent = attack.requests_sent || 0;
+            document.getElementById('attack-status').textContent = attack.status.toUpperCase();
+            
+            // Update progress if duration is known
+            if (attack.duration && attack.runtime) {
+                const progress = (attack.runtime / attack.duration) * 100;
+                document.getElementById('attack-progress').style.width = `${Math.min(progress, 100)}%`;
+            }
+        }
+        
+        // Check API status
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.status === 'online') {
+                    document.getElementById('api-status').textContent = 'ONLINE';
+                    document.getElementById('api-status').style.color = '#00ff88';
+                    document.getElementById('active-attacks').textContent = data.attacks_active || 0;
+                }
+            } catch (error) {
+                document.getElementById('api-status').textContent = 'OFFLINE';
+                document.getElementById('api-status').style.color = '#ff0055';
+            }
+        }
+        
+        // Add log entry
+        function addLog(message, type = 'info') {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            const typeClass = `log-${type}`;
+            
+            logEntry.innerHTML = `
+                <span class="log-time">[${timeStr}]</span>
+                <span class="log-message ${typeClass}">${message}</span>
+            `;
+            
+            logBox.appendChild(logEntry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+        
+        // Initial setup
+        updateDurationValue();
+        updateIntensityValue();
+        
+        // Add initial logs
+        setTimeout(() => addLog('System ready for DOS attacks', 'success'), 500);
+        setTimeout(() => addLog('Select target and method to begin', 'info'), 1000);
+    </script>
+</body>
+</html>
