@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/dos.py": {
+    "api/index.py": {
       "maxDuration": 60,
       "memory": 1024
     }
@@ -8,24 +8,11 @@
   "rewrites": [
     {
       "source": "/dos",
-      "destination": "/public/dos-panel.html"
+      "destination": "/public/index.html"
     },
     {
-      "source": "/api/dos/(.*)",
-      "destination": "/api/dos.py"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/api/dos.py"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" }
-      ]
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     }
   ]
 }
